@@ -2,33 +2,77 @@
 import { useState } from 'react'
 import './App.css'
 import Die from './Components/Die'
+import { nanoid } from 'nanoid';
+import ReactConfetti from 'react-confetti';
+
 
 function App() {
 const [dice,setDice]=useState(()=>generateAllNewDice());
 function generateAllNewDice(){
   return new Array (10)
   .fill(0)
-  .map(()=>Math.ceil(Math.random()*6))
+  .map(()=>({value:Math.ceil(Math.random()*6),
+               isHeld: false,
+                id:nanoid()})
+    )
 }
-const diceElements=dice.map(num=><Die value=
-  {num}></Die>)
-// for (let i = 0; i < dice.length; i++) {
-//   const diceElements=
-// }
+//win the game 
+
+const gameWon=dice.every(die=>die.isHeld)&&
+dice.every(die=>die.value= dice[0].value)
+
+
+
+
 const rollDice=()=>{
-  setDice(generateAllNewDice())
+  if (gameWon) {
+    setDice(generateAllNewDice())
+  }else{
+ setDice(oldDice=>oldDice.map(die=>
+    die.isHeld?
+    die:
+    {...die,value:Math.ceil(Math.random()*6)}
+  ))
+  }
+ 
 }
+
+const hold=(id)=>{
+  console.log('click');
+  console.log(id);
+  
+  setDice(oldDice=>oldDice.map(die=>
+    // console.log(die.id)
+    
+             die.id === id ?
+              {...die,
+              isHeld: !die.isHeld} :
+             die
+  ))
+}
+
+const diceElements=dice.map(dieObj=><Die
+  value={dieObj.value}
+     key={dieObj.id}
+     isHeld={dieObj.isHeld}
+     hold={()=>hold(dieObj.id)}
+     ></Die>)
+
+
   return (
     <main className='flex  flex-col 
       justify-center 
        items-center' >
+        {gameWon&& <ReactConfetti  ></ReactConfetti>}
+
     <div className='dice-container grid grid-cols-5  gap-4 p-5'>
      {diceElements}
     </div>
     <div >
       <button onClick={rollDice}
        className='p-3
-      rounded font-bold bg-blue-600 text-white'>Roll</button>
+      rounded font-bold bg-blue-600
+       text-white'>{ gameWon?"New Game" : "Roll"}</button>
     </div>
     </main> 
   )
