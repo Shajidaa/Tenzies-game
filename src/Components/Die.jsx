@@ -8,7 +8,12 @@ const Die = (props) => {
         <div>
             <button  style={styles}  
             onClick={props.hold}
-            className='p-3 shadow-xl rounded font-bold '>
+            aria-pressed={props.isHeld}
+            aria-label={`Die with value ${props.value} ,
+             ${props.isHeld?'held':'not held'}
+            `}
+           className='p-3 shadow-xl rounded font-bold '
+            >
                  {props.value}  </button>
         </div>
     );

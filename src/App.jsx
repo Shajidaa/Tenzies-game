@@ -19,27 +19,30 @@ function generateAllNewDice(){
 //win the game 
 
 const gameWon=  dice.every(die=>die.isHeld)&&
-                dice.every(die=>die.value=== dice[0].value)
+                dice.every(die=>die.value === dice[0].value)
 
 
 
 
 const rollDice=()=>{
   if (gameWon) {
+
     setDice(generateAllNewDice())
+
   }else{
  setDice(oldDice=>oldDice.map(die=>
     die.isHeld?
     die:
-    {...die,value:Math.ceil(Math.random()*6)}
+    {...die,
+      value:Math.ceil(Math.random()*6)}
   ))
   }
  
 }
 
 const hold=(id)=>{
-  console.log('click');
-  console.log(id);
+  // console.log('click');
+  // console.log(id);
   
   setDice(oldDice=>oldDice.map(die=>
     // console.log(die.id)
@@ -55,7 +58,11 @@ const diceElements=dice.map(dieObj=><Die
   value={dieObj.value}
      key={dieObj.id}
      isHeld={dieObj.isHeld}
-     hold={()=>hold(dieObj.id)}
+     hold={()=>{
+      if (!gameWon) {
+        hold(dieObj.id)
+      }
+      }}
      ></Die>)
 
 
